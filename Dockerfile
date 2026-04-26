@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y build-essential cmake libboost-all-dev 
 WORKDIR /app
 COPY include/ ./include/
 COPY src/ ./src/
+COPY Library_Files/ ./Library_Files/
 COPY Main.cpp ./
 COPY CMakeLists.txt ./
 COPY nodes.csv ./
