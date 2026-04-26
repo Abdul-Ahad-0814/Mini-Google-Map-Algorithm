@@ -539,8 +539,8 @@ export default function MapView({ theme, onToggleTheme }) {
         <main className="map-area">
           <div className="map-canvas" id="map-root" style={mapStyle}>
             <MapContainer
-              center={[24.8607,67.0011]}
-              zoom={13}
+              center={[25.7617,-80.1918]}
+              zoom={10}
               style={{height:'100%',width:'100%'}}
               whenCreated={(map) => {
                 mapRef.current = map;
