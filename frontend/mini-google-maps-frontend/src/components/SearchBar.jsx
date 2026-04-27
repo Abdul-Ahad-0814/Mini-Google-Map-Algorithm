@@ -21,7 +21,7 @@ export default function SearchBar({ onSetStart, onSetEnd, onSetStop, className }
     try {
       setLoading(true);
       setError(null);
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=50&countrycodes=pk&viewbox=66.95,25.40,67.35,24.70&bounded=1`;
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=50&countrycodes=us&viewbox=-87.6,31.0,-80.0,24.5&bounded=1`;
       
       const res = await axios.get(url, { signal: controller.signal, headers: { 'Accept-Language': 'en' } });
       setResults(res.data || []);
