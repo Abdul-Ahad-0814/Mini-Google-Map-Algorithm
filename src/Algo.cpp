@@ -23,12 +23,12 @@ void Algorithms::printPath(Graph& g,unordered_map<long long, long long> &parent,
 
     reverse(path.begin(), path.end());
     ofstream ot("path_cordinates.csv");
-    ot<< "lat,lon\n";
+    ot<< "node_id,lat,lon\n";
 
      for (auto node : path) {
         cout << node << " ";
         auto n = g.get_nodes().at(node);
-        ot << n.get_latitude() << "," << n.get_longitude() << "\n";
+        ot << node << "," << n.get_latitude() << "," << n.get_longitude() << "\n";
     }
     cout << endl;
 

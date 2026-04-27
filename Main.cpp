@@ -258,9 +258,11 @@ int main()
             int idx = 0;
             while (std::getline(pathFile, line)) {
                 std::stringstream ss(line);
-                std::string latStr, lonStr;
+                std::string idStr, latStr, lonStr;
+                if (!std::getline(ss, idStr, ',')) break;
                 if (!std::getline(ss, latStr, ',')) break;
                 if (!std::getline(ss, lonStr, ',')) break;
+                result["path"][idx]["node_id"] = std::stoll(idStr);
                 result["path"][idx]["lat"] = std::stod(latStr);
                 result["path"][idx]["lng"] = std::stod(lonStr);
                 idx++;
