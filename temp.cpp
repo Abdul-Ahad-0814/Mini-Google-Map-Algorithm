@@ -16,8 +16,9 @@ int main()
 {
     Algorithms a;
     Graph g;
-    parseOSM(g, "Karachi/Karachi.osm");
+    parseOSM(g, "florida-260425.osm.pbf");
     exporttocsv(g);
     exporttotxt(g);
+    exportMLfeatures(g, "florida.csv");
     return 0;
 }

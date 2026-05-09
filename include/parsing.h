@@ -9,3 +9,4 @@ using namespace std;
 void parseOSM(Graph& graph, const string& filename);
 void exporttocsv(Graph& graph1);
 void exporttotxt(Graph& graph1);
+void exportMLfeatures(Graph &graph, const string &osmFilename, const string &outputFilename);
