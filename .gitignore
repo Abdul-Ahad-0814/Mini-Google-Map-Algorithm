@@ -11,13 +11,19 @@ build/
 *.sln
 *.DS_Store
 
-#Ignore karachi osm folder
+# Ignore map/data files
 Karachi OSM/
 *.osm
+*.pbf
+*.csv
 *.rar
+
+# Environment/config
 config.bat
-node_modules
+node_modules/
 .env
+osm_env/
+
+# Specific files
 user_data.pbf
 Dockerfile
-osm_env/
