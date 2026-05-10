@@ -59,6 +59,7 @@ export default function MapView({ theme, onToggleTheme }) {
   const [stops, setStops] = useState([]);
   const [path, setPath] = useState([]);
   const [segments, setSegments] = useState([]);
+  const [isLoadingML, setIsLoadingML] = useState(false);
   const [routeHistory, setRouteHistory] = useState([]);
   const [awaitingStart, setAwaitingStart] = useState(false);
   const [awaitingStop, setAwaitingStop] = useState(false);
@@ -454,6 +455,7 @@ export default function MapView({ theme, onToggleTheme }) {
       }
     }
     setPath(merged);
+    setIsLoadingML(true);
     try {
       const mlRes = await axios.post('https://urban-sense-ai.onrender.com/predict-route', {
         state: 'fl',
@@ -464,6 +466,8 @@ export default function MapView({ theme, onToggleTheme }) {
     } catch (err) {
       console.error('ML prediction error:', err);
       setSegments([]);
+    } finally {
+      setIsLoadingML(false);
     }
     if (!distancesKnown) {
       total = 0;
@@ -634,6 +638,8 @@ export default function MapView({ theme, onToggleTheme }) {
             pathPointsCount={path.length}
             navActive={navActive}
             onToggleNavigation={toggleNavigation}
+            isLoadingML={isLoadingML}
+            segments={segments}
           />
         </main>
       </div>

@@ -23,7 +23,9 @@ export default function RouteBox({
   onFitRoute,
   pathPointsCount,
   navActive,
-  onToggleNavigation
+  onToggleNavigation,
+  isLoadingML = false,
+  segments = []
 }) {
   return (
     <div className="routebox" role="region" aria-live="polite">
@@ -58,6 +60,27 @@ export default function RouteBox({
         <>
           <div className="meta">Distance</div>
 
+          {/* ML Risk Indicator */}
+          {isLoadingML && (
+            <div style={{display:'flex',alignItems:'center',gap:8,padding:'6px 10px',background:'#f0f9ff',borderRadius:8,marginBottom:8,fontSize:13}}>
+              <span style={{animation:'spin 1s linear infinite',display:'inline-block'}}>⟳</span>
+              <span style={{color:'#0369a1'}}>Analyzing road risk...</span>
+            </div>
+          )}
+          {!isLoadingML && segments.length > 0 && (
+            <div style={{display:'flex',gap:6,marginBottom:8,flexWrap:'wrap'}}>
+              {[['#4ade80','Safe'],['#facc15','Moderate'],['#f97316','Risky'],['#f87171','Dangerous']].map(([color,label]) => {
+                const count = segments.filter(s => s.color === color).length;
+                if (!count) return null;
+                return (
+                  <span key={label} style={{display:'flex',alignItems:'center',gap:4,padding:'2px 8px',borderRadius:99,background:color+'22',fontSize:12,fontWeight:500}}>
+                    <span style={{width:8,height:8,borderRadius:'50%',background:color,display:'inline-block'}}></span>
+                    {label}: {count}
+                  </span>
+                );
+              })}
+            </div>
+          )}
           {/* Prominent distance like Google Maps */}
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
             <div>
