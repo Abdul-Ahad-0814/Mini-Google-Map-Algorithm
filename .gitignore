@@ -26,4 +26,6 @@ osm_env/
 
 # Specific files
 user_data.pbf
-Dockerfile
+Dockerfile*.pbf
+florida*
+*.osm
