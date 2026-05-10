@@ -6,6 +6,7 @@ import axios from 'axios';
 import SearchBar from './SearchBar';
 import Sidebar from './Sidebar';
 import RouteBox from './RouteBox';
+import Chatbot from './Chatbot';
 import ThemeToggle from './ThemeToggle';
 import image from '../assets/K.png';
 
@@ -257,6 +258,7 @@ export default function MapView({ theme, onToggleTheme }) {
     setStops([]);
     setPath([]);
     setSegments([]);
+    setSegments([]);
     setIsFetching(false);
     setDistanceMeters(0);
     setEstimates({ driving: null, walking: null });
@@ -469,6 +471,20 @@ export default function MapView({ theme, onToggleTheme }) {
     } finally {
       setIsLoadingML(false);
     }
+    setIsLoadingML(true);
+    try {
+      const mlRes = await axios.post('https://urban-sense-ai.onrender.com/predict-route', {
+        state: 'fl',
+        weather_api_key: '',
+        points: merged.map(p => ({ node_id: p.node_id || 0, lat: p.lat, lng: p.lng }))
+      });
+      if (mlRes.data?.segments) setSegments(mlRes.data.segments);
+    } catch (err) {
+      console.error('ML prediction error:', err);
+      setSegments([]);
+    } finally {
+      setIsLoadingML(false);
+    }
     if (!distancesKnown) {
       total = 0;
       for (let i = 1; i < merged.length; i++) total += haversineMeters(merged[i - 1], merged[i]);
@@ -640,9 +656,12 @@ export default function MapView({ theme, onToggleTheme }) {
             onToggleNavigation={toggleNavigation}
             isLoadingML={isLoadingML}
             segments={segments}
+            isLoadingML={isLoadingML}
+            segments={segments}
           />
         </main>
       </div>
+      <Chatbot onRouteFound={({path, segments}) => { setPath(path); setSegments(segments); }} />
     </div>
   );
 }
