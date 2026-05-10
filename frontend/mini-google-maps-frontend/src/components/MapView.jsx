@@ -58,6 +58,7 @@ export default function MapView({ theme, onToggleTheme }) {
   const [destination, setDestination] = useState(null);
   const [stops, setStops] = useState([]);
   const [path, setPath] = useState([]);
+  const [segments, setSegments] = useState([]);
   const [routeHistory, setRouteHistory] = useState([]);
   const [awaitingStart, setAwaitingStart] = useState(false);
   const [awaitingStop, setAwaitingStop] = useState(false);
@@ -254,6 +255,7 @@ export default function MapView({ theme, onToggleTheme }) {
     setDestination(null);
     setStops([]);
     setPath([]);
+    setSegments([]);
     setIsFetching(false);
     setDistanceMeters(0);
     setEstimates({ driving: null, walking: null });
@@ -452,6 +454,17 @@ export default function MapView({ theme, onToggleTheme }) {
       }
     }
     setPath(merged);
+    try {
+      const mlRes = await axios.post('https://urban-sense-ai.onrender.com/predict-route', {
+        state: 'fl',
+        weather_api_key: '',
+        points: merged.map(p => ({ node_id: p.node_id || 0, lat: p.lat, lng: p.lng }))
+      });
+      if (mlRes.data?.segments) setSegments(mlRes.data.segments);
+    } catch (err) {
+      console.error('ML prediction error:', err);
+      setSegments([]);
+    }
     if (!distancesKnown) {
       total = 0;
       for (let i = 1; i < merged.length; i++) total += haversineMeters(merged[i - 1], merged[i]);
@@ -560,7 +573,17 @@ export default function MapView({ theme, onToggleTheme }) {
               <Marker key={`stop-${i}`} position={[st.lat, st.lng]} icon={stopIcon} />
             ))}
             {destination && <Marker position={[destination.lat, destination.lng]} icon={destinationIcon} />}
-              {path.length > 0 && (
+              {segments.length > 1 ? (
+                segments.slice(0, -1).map((seg, i) => (
+                  <Polyline
+                    key={`seg-${i}`}
+                    positions={[[seg.lat, seg.lng], [segments[i+1].lat, segments[i+1].lng]]}
+                    color={seg.color || "#1a73e8"}
+                    weight={6}
+                    opacity={0.9}
+                  />
+                ))
+              ) : path.length > 0 && (
                 <Polyline
                   positions={path.map(p => [p.lat, p.lng])}
                   color="#1a73e8"
